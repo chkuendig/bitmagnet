@@ -9,6 +9,7 @@ import (
 	"github.com/bitmagnet-io/bitmagnet/internal/protocol/metainfo"
 	"github.com/prometheus/client_golang/prometheus"
 	"gorm.io/gorm/clause"
+    "time"
 )
 
 // runPersistTorrents waits on the persistTorrents channel, and persists torrents to the database in batches.
@@ -43,7 +44,8 @@ func (c *crawler) runPersistTorrents(ctx context.Context) {
 					continue
 				}
 				hashMap[i.infoHash] = i
-				if t, err := createTorrentModel(i.infoHash, i.metaInfo, c.savePieces, c.saveFilesThreshold); err != nil {
+				// c.logger.Infow("gpt metainfo","CreationDate", i.metaInfoDetails.CreationDate,"hash", i.infoHash.String(), "files", i.metaInfo.Files,"Name", i.metaInfo.Name, "CreatedBy", i.metaInfoDetails.CreatedBy,  "CreationDate timestamp", time.Unix(i.metaInfoDetails.CreationDate,0))
+				if t, err := createTorrentModel(i.infoHash, i.metaInfo, i.metaInfoDetails, c.savePieces, c.saveFilesThreshold); err != nil {
 					c.logger.Errorf("error creating torrent model: %s", err.Error())
 				} else {
 					ts = append(ts, &t)
@@ -89,6 +91,7 @@ func (c *crawler) runPersistTorrents(ctx context.Context) {
 func createTorrentModel(
 	hash protocol.ID,
 	info metainfo.Info,
+	metaInfo metainfo.MetaInfo,
 	savePieces bool,
 	saveFilesThreshold uint,
 ) (model.Torrent, error) {
@@ -120,6 +123,7 @@ func createTorrentModel(
 			Pieces:      info.Pieces,
 		}
 	}
+
 	return model.Torrent{
 		InfoHash:    hash,
 		Name:        name,
@@ -132,6 +136,7 @@ func createTorrentModel(
 			{
 				Source:   "dht",
 				InfoHash: hash,
+				PublishedAt: time.Unix(metaInfo.CreationDate,0),
 			},
 		},
 	}, nil
@@ -154,6 +159,7 @@ func (c *crawler) runPersistSources(ctx context.Context) {
 					continue
 				}
 				hashSet[s.infoHash] = struct{}{}
+				// c.logger.Infow("createTorrentSourceMode","hash",s.infoHash.String())
 				if src, err := createTorrentSourceModel(s); err != nil {
 					c.logger.Errorf("error creating torrent source model: %s", err.Error())
 				} else {

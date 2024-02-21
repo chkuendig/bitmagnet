@@ -73,6 +73,7 @@ type HandshakeInfo struct {
 type Response struct {
 	HandshakeInfo
 	Info metainfo.Info
+	MetaInfo metainfo.MetaInfo
 }
 
 func (r requester) Request(ctx context.Context, infoHash protocol.ID, addr netip.AddrPort) (Response, error) {
@@ -100,13 +101,14 @@ func (r requester) Request(ctx context.Context, infoHash protocol.ID, addr netip
 	if readAllPiecesErr != nil {
 		return Response{}, readAllPiecesErr
 	}
-	parsed, parseErr := metainfo.ParseMetaInfoBytes(infoHash, pieces)
+	parsedInfo, parsedMetaInfo, parseErr := metainfo.ParseMetaInfoBytes(infoHash, pieces)
 	if parseErr != nil {
 		return Response{}, parseErr
 	}
 	return Response{
 		HandshakeInfo: hsInfo,
-		Info:          parsed,
+		Info:          parsedInfo,
+		MetaInfo:  parsedMetaInfo,
 	}, nil
 }
 

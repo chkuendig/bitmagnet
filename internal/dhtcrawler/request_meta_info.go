@@ -20,6 +20,7 @@ func (c *crawler) runRequestMetaInfo(ctx context.Context) {
 		case c.persistTorrents.In() <- infoHashWithMetaInfo{
 			nodeHasPeersForHash: req.nodeHasPeersForHash,
 			metaInfo:            mi.Info,
+			metaInfoDetails:	 mi.MetaInfo,
 		}:
 		}
 	})
