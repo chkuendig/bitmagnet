@@ -1,12 +1,13 @@
 package gen
 
 import (
+	"path"
+	"runtime"
+
 	"github.com/iancoleman/strcase"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
-	"path"
-	"runtime"
 )
 
 func BuildGenerator(db *gorm.DB) *gen.Generator {
@@ -105,6 +106,9 @@ func BuildGenerator(db *gorm.DB) *gen.Generator {
 		}),
 		createdAtReadOnly,
 	)
+
+	releases := g.GenerateModel("releases")
+
 	torrents := g.GenerateModel(
 		"torrents",
 		gen.FieldRelate(
@@ -436,6 +440,7 @@ func BuildGenerator(db *gorm.DB) *gen.Generator {
 		torrentsTorrentSources,
 		torrentPieces,
 		torrentTags,
+		releases,
 		torrents,
 		metadataSources,
 		torrentContent,
