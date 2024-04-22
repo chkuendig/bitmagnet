@@ -32,7 +32,7 @@ func newRelease(db *gorm.DB, opts ...gen.DOOption) release {
 	_release.Size = field.NewField(tableName, "size")
 	_release.Files = field.NewField(tableName, "files")
 	_release.Filename = field.NewField(tableName, "filename")
-	_release.Nuked = field.NewBool(tableName, "nuked")
+	_release.Nuked = field.NewInt32(tableName, "nuked")
 	_release.Nukereason = field.NewField(tableName, "nukereason")
 	_release.Category = field.NewField(tableName, "category")
 	_release.Created = field.NewTime(tableName, "created")
@@ -55,7 +55,7 @@ type release struct {
 	Size         field.Field
 	Files        field.Field
 	Filename     field.Field
-	Nuked        field.Bool
+	Nuked        field.Int32
 	Nukereason   field.Field
 	Category     field.Field
 	Created      field.Time
@@ -84,7 +84,7 @@ func (r *release) updateTableName(table string) *release {
 	r.Size = field.NewField(table, "size")
 	r.Files = field.NewField(table, "files")
 	r.Filename = field.NewField(table, "filename")
-	r.Nuked = field.NewBool(table, "nuked")
+	r.Nuked = field.NewInt32(table, "nuked")
 	r.Nukereason = field.NewField(table, "nukereason")
 	r.Category = field.NewField(table, "category")
 	r.Created = field.NewTime(table, "created")

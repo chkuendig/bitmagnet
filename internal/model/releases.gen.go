@@ -17,7 +17,7 @@ type Release struct {
 	Size         NullString `gorm:"column:size" json:"size"`
 	Files        NullString `gorm:"column:files" json:"files"`
 	Filename     NullString `gorm:"column:filename" json:"filename"`
-	Nuked        bool       `gorm:"column:nuked" json:"nuked"`
+	Nuked        int32      `gorm:"column:nuked" json:"nuked"`
 	Nukereason   NullString `gorm:"column:nukereason" json:"nukereason"`
 	Category     NullString `gorm:"column:category" json:"category"`
 	Created      time.Time  `gorm:"column:created;not null" json:"created"`
