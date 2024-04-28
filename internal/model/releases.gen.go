@@ -12,19 +12,11 @@ const TableNameRelease = "releases"
 
 // Release mapped from table <releases>
 type Release struct {
-	Title        string     `gorm:"column:title;primaryKey" json:"title"`
-	Nfo          NullString `gorm:"column:nfo" json:"nfo"`
-	Size         NullString `gorm:"column:size" json:"size"`
-	Files        NullString `gorm:"column:files" json:"files"`
-	Filename     NullString `gorm:"column:filename" json:"filename"`
-	Nuked        int32      `gorm:"column:nuked" json:"nuked"`
-	Nukereason   NullString `gorm:"column:nukereason" json:"nukereason"`
-	Category     NullString `gorm:"column:category" json:"category"`
-	Created      time.Time  `gorm:"column:created;not null" json:"created"`
-	Source       NullString `gorm:"column:source" json:"source"`
-	Requestid    NullString `gorm:"column:requestid" json:"requestid"`
-	Groupname    NullString `gorm:"column:groupname" json:"groupname"`
-	NzedbpreDump time.Time  `gorm:"column:nzedbpre_dump;not null" json:"nzedbpreDump"`
+	Name     string     `gorm:"column:name;primaryKey" json:"name"`
+	Created  time.Time  `gorm:"column:created" json:"created"`
+	Nuked    int32      `gorm:"column:nuked" json:"nuked"`
+	Category NullString `gorm:"column:category" json:"category"`
+	Nfo      NullString `gorm:"column:nfo" json:"nfo"`
 }
 
 // TableName Release's table name

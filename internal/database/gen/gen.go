@@ -108,6 +108,8 @@ func BuildGenerator(db *gorm.DB) *gen.Generator {
 	)
 
 	releases := g.GenerateModel("releases")
+	releasePre := g.GenerateModel("release_pre")
+	torrentRelease := g.GenerateModel("torrent_release")
 
 	torrents := g.GenerateModel(
 		"torrents",
@@ -441,6 +443,8 @@ func BuildGenerator(db *gorm.DB) *gen.Generator {
 		torrentPieces,
 		torrentTags,
 		releases,
+		releasePre,
+		torrentRelease,
 		torrents,
 		metadataSources,
 		torrentContent,

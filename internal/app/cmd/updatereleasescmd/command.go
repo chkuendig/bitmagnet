@@ -56,7 +56,7 @@ func New(p Params) (Result, error) {
 			// TODO: Fetch most recent releases from https://api.predb.net/
 
 			var lastImportTime time.Time
-			result := d.Release.WithContext(ctx.Context).UnderlyingDB().Table("releases").Select("max(nzedbpre_dump)")
+			result := d.Release.WithContext(ctx.Context).UnderlyingDB().Table("release_pre").Select("max(nzedbpre_dump)")
 			err = result.Row().Scan(&lastImportTime)
 			if err != nil {
 				lastImportTime = time.Unix(0, 0)
@@ -174,7 +174,7 @@ func New(p Params) (Result, error) {
 					os.Exit(1)
 				} else {
 
-					releases := make([]model.Release, 0)
+					releases := make([]model.ReleasePre, 0)
 					dumpDate, _ := strconv.ParseInt(nextDump.Name[:strings.IndexByte(nextDump.Name, '_')], 10, 64) // no need to check error, already done above
 					fmt.Printf("Importing %s from %s, size: %d \n", nextDump.Path, time.Unix(dumpDate, 0).String(), len(resp.Body()))
 					gzreader, err := gzip.NewReader(bytes.NewReader([]byte(resp.Body())))
@@ -205,6 +205,9 @@ func New(p Params) (Result, error) {
 						}
 						//fmt.Println("----") // Println will add back the final '\n' */
 						createdTime, err := time.ParseInLocation("2006-01-02 15:04:05", fields[8], loc)
+						if fields[9] == "m2v.ru" { // this source has timestamps that are constantly off by 8 hours
+							createdTime = createdTime.Add(time.Hour * 8)
+						}
 						if err != nil {
 							println("cant parse date")
 							panic(err)
@@ -214,8 +217,8 @@ func New(p Params) (Result, error) {
 							println("cant parse int")
 							panic(err)
 						}
-						release := model.Release{
-							Title:        fields[0],
+						release := model.ReleasePre{
+							Name:         fields[0],
 							Nfo:          model.NewNullString(fields[1]),
 							Size:         model.NewNullString(fields[2]),
 							Files:        model.NewNullString(fields[3]),
@@ -224,14 +227,14 @@ func New(p Params) (Result, error) {
 							Nukereason:   model.NewNullString(fields[6]),
 							Category:     model.NewNullString(fields[7]),
 							Created:      createdTime,
-							Source:       model.NewNullString(fields[9]),
+							Source:       string(fields[9]),
 							Requestid:    model.NewNullString(fields[10]),
 							Groupname:    model.NewNullString(fields[11]),
 							NzedbpreDump: time.Unix(dumpDate, 0),
 						}
 						releases = append(releases, release)
 					}
-					t := d.Release
+					t := d.ReleasePre
 					result := t.UnderlyingDB().Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&releases, 1000) // Create in bulk to make sure we get the whole dump in one transaction, ignore lines that were imported fron other dumps
 					if result.Error != nil {
 						panic(result.Error)

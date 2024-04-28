@@ -27,19 +27,11 @@ func newRelease(db *gorm.DB, opts ...gen.DOOption) release {
 
 	tableName := _release.releaseDo.TableName()
 	_release.ALL = field.NewAsterisk(tableName)
-	_release.Title = field.NewString(tableName, "title")
-	_release.Nfo = field.NewField(tableName, "nfo")
-	_release.Size = field.NewField(tableName, "size")
-	_release.Files = field.NewField(tableName, "files")
-	_release.Filename = field.NewField(tableName, "filename")
-	_release.Nuked = field.NewInt32(tableName, "nuked")
-	_release.Nukereason = field.NewField(tableName, "nukereason")
-	_release.Category = field.NewField(tableName, "category")
+	_release.Name = field.NewString(tableName, "name")
 	_release.Created = field.NewTime(tableName, "created")
-	_release.Source = field.NewField(tableName, "source")
-	_release.Requestid = field.NewField(tableName, "requestid")
-	_release.Groupname = field.NewField(tableName, "groupname")
-	_release.NzedbpreDump = field.NewTime(tableName, "nzedbpre_dump")
+	_release.Nuked = field.NewInt32(tableName, "nuked")
+	_release.Category = field.NewField(tableName, "category")
+	_release.Nfo = field.NewField(tableName, "nfo")
 
 	_release.fillFieldMap()
 
@@ -49,20 +41,12 @@ func newRelease(db *gorm.DB, opts ...gen.DOOption) release {
 type release struct {
 	releaseDo
 
-	ALL          field.Asterisk
-	Title        field.String
-	Nfo          field.Field
-	Size         field.Field
-	Files        field.Field
-	Filename     field.Field
-	Nuked        field.Int32
-	Nukereason   field.Field
-	Category     field.Field
-	Created      field.Time
-	Source       field.Field
-	Requestid    field.Field
-	Groupname    field.Field
-	NzedbpreDump field.Time
+	ALL      field.Asterisk
+	Name     field.String
+	Created  field.Time
+	Nuked    field.Int32
+	Category field.Field
+	Nfo      field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -79,19 +63,11 @@ func (r release) As(alias string) *release {
 
 func (r *release) updateTableName(table string) *release {
 	r.ALL = field.NewAsterisk(table)
-	r.Title = field.NewString(table, "title")
-	r.Nfo = field.NewField(table, "nfo")
-	r.Size = field.NewField(table, "size")
-	r.Files = field.NewField(table, "files")
-	r.Filename = field.NewField(table, "filename")
-	r.Nuked = field.NewInt32(table, "nuked")
-	r.Nukereason = field.NewField(table, "nukereason")
-	r.Category = field.NewField(table, "category")
+	r.Name = field.NewString(table, "name")
 	r.Created = field.NewTime(table, "created")
-	r.Source = field.NewField(table, "source")
-	r.Requestid = field.NewField(table, "requestid")
-	r.Groupname = field.NewField(table, "groupname")
-	r.NzedbpreDump = field.NewTime(table, "nzedbpre_dump")
+	r.Nuked = field.NewInt32(table, "nuked")
+	r.Category = field.NewField(table, "category")
+	r.Nfo = field.NewField(table, "nfo")
 
 	r.fillFieldMap()
 
@@ -108,20 +84,12 @@ func (r *release) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *release) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 13)
-	r.fieldMap["title"] = r.Title
-	r.fieldMap["nfo"] = r.Nfo
-	r.fieldMap["size"] = r.Size
-	r.fieldMap["files"] = r.Files
-	r.fieldMap["filename"] = r.Filename
-	r.fieldMap["nuked"] = r.Nuked
-	r.fieldMap["nukereason"] = r.Nukereason
-	r.fieldMap["category"] = r.Category
+	r.fieldMap = make(map[string]field.Expr, 5)
+	r.fieldMap["name"] = r.Name
 	r.fieldMap["created"] = r.Created
-	r.fieldMap["source"] = r.Source
-	r.fieldMap["requestid"] = r.Requestid
-	r.fieldMap["groupname"] = r.Groupname
-	r.fieldMap["nzedbpre_dump"] = r.NzedbpreDump
+	r.fieldMap["nuked"] = r.Nuked
+	r.fieldMap["category"] = r.Category
+	r.fieldMap["nfo"] = r.Nfo
 }
 
 func (r release) clone(db *gorm.DB) release {
