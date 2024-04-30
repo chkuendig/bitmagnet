@@ -87,7 +87,14 @@ func New(p Params) (Result, error) {
 				os.Exit(1)
 			} else {
 				var files []GithubFile
-				err := json.Unmarshal(resp.Body(), &files)
+
+				var data map[string]interface{}
+				json.Unmarshal(resp.Body(), &data)
+				if message := data["message"]; message != nil {
+					fmt.Println("Github API Error: ", message)
+					os.Exit(1)
+				}
+				err = json.Unmarshal(resp.Body(), &files)
 				// figure out which folders to open
 				if err != nil {
 					fmt.Println("Cant unmarshal folder listing: ", err)
@@ -152,7 +159,7 @@ func New(p Params) (Result, error) {
 			// add up to next 10 dumps to list of imports
 			// Note: Github API is rate limited to 60 req/h, but downloads aren't so this batch size
 			// could be set higher or even unlimited to download full folders at once
-			batchSize := 50
+			batchSize := 10
 			sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
 			for idx, k := range keys {
 				if k > lastImport && len(nextDumps) == 0 {
