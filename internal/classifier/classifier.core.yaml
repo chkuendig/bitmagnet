@@ -5,6 +5,9 @@ workflows:
     - if_else:
         condition: "([torrent.baseName] + torrent.files.map(f, f.basePath)).join(' ').matches(keywords.banned)"
         if_action: delete
+    # try to find a release in predb, todo: make this optional with a flag
+    - find_match:
+      - attach_release_from_predb
     # try to identify content type for torrents without a hinted content type:
     - if_else:
         condition: "result.contentType == contentType.unknown"

@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/bitmagnet-io/bitmagnet/internal/classifier/classification"
 	"github.com/bitmagnet-io/bitmagnet/internal/model"
 	"github.com/bitmagnet-io/bitmagnet/internal/protobuf"
 	"github.com/google/cel-go/cel"
-	"strings"
 )
 
 type Compiler interface {
@@ -126,7 +127,8 @@ type compilerError struct {
 }
 
 func (e compilerError) Error() string {
-	return fmt.Sprintf("compiler error at path '%s': %s", strings.Join(e.path, "."), e.cause)
+	panic(fmt.Sprintf("compiler error at path '%s': %s", strings.Join(e.path, "."), e.cause))
+	return ""
 }
 
 func (e compilerError) Unwrap() error {

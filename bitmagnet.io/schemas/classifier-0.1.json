@@ -29,6 +29,11 @@
       ],
       "type": "object"
     },
+
+    "action__attach_release_from_predb": {
+      "const": "attach_release_from_predb",
+      "description": "Attempt to attach a predb release with a search on the torrent name"
+    },
     "action__attach_local_content_by_id": {
       "const": "attach_local_content_by_id",
       "description": "Use the torrent hint to attach locally stored content by ID"
@@ -157,6 +162,9 @@
       "oneOf": [
         {
           "$ref": "#/definitions/action__add_tag"
+        },
+        {
+          "$ref": "#/definitions/action__attach_release_from_predb"
         },
         {
           "$ref": "#/definitions/action__attach_local_content_by_id"

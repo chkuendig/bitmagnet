@@ -32,6 +32,7 @@ var defaultFeatures = newFeatures(
 	actions(
 		addTagAction{},
 		attachLocalContentByIdAction{},
+		attachReleaseFromPreDBAction{},
 		attachLocalContentBySearchAction{},
 		attachTmdbContentByIdAction{},
 		attachTmdbContentBySearchAction{},
